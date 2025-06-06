@@ -223,7 +223,11 @@ cat > .gitignore << 'EOF'
 node_modules/
 EOF
 
-# 5. Initialize Git and commit
+# 5. Initialize npm project and install Jest
+npm init -y
+npm install --save-dev jest
+
+# 6. Initialize Git and commit
 git init
 git add .
 git commit -m "Initial scaffold for Dunjy Krawl by BenGothard (index.html, style.css, main.js, .gitignore)"

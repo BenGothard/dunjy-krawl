@@ -1,0 +1,16 @@
+{
+  "name": "dunjy-krawl",
+  "version": "1.0.0",
+  "description": "Dunjy Krawl: A lightweight web-based dungeon crawler by Ben Gothard. The game now features simple character sprites so the player and enemies look more like people and monsters instead of plain squares.",
+  "main": "main.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "jest": "^29.7.0"
+  }
+}
