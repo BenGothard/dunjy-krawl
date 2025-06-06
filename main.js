@@ -246,11 +246,17 @@ function checkCollisions() {
 let gameRunning = true;
 
 // Main game loop
-function gameLoop() {
-  if (!gameRunning) return;
+// Update all game entities
+function update() {
   updatePlayer();
   updateEnemies();
   checkCollisions();
+}
+
+// Main game loop
+function gameLoop() {
+  if (!gameRunning) return;
+  update();
   render();
   requestAnimationFrame(gameLoop);
 }
