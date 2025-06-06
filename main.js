@@ -243,6 +243,12 @@ let keysDown = {};
 window.addEventListener(
   'keydown',
   (e) => {
+    // restart if game over and R is pressed
+    if (!gameRunning && e.key.toLowerCase() === 'r') {
+      init();
+      return;
+    }
+
     keysDown[e.key] = true;
     if (e.code === 'Space') {
       swingWeapon();
@@ -389,6 +395,17 @@ function checkCollisions() {
 
 let gameRunning = true;
 
+function drawGameOver() {
+  ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = '#fff';
+  ctx.font = '32px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('Game Over', canvas.width / 2, canvas.height / 2 - 20);
+  ctx.font = '20px sans-serif';
+  ctx.fillText('Press R to restart', canvas.width / 2, canvas.height / 2 + 20);
+}
+
 // Main game loop
 // Update all game entities
 function update() {
@@ -400,7 +417,11 @@ function update() {
 
 // Main game loop
 function gameLoop() {
-  if (!gameRunning) return;
+  if (!gameRunning) {
+    render();
+    drawGameOver();
+    return;
+  }
   update();
   render();
   requestAnimationFrame(gameLoop);
@@ -408,7 +429,9 @@ function gameLoop() {
 
 // Entry point
 function init() {
+  arrowCount = 10;
   generateDungeon();
+  gameRunning = true;
   gameLoop();
 }
 

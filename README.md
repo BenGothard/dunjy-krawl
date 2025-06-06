@@ -21,4 +21,5 @@ can play the game from their browser.
 - Press **Space** to swing your weapon at the tile in front of you
 - Press **F** to fire an arrow toward the mouse pointer
   - You start with 10 arrows displayed on the HUD
+- Press **R** to restart after a Game Over
 
