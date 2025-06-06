@@ -384,13 +384,16 @@ function updateProjectiles() {
 
 // Check collisions: if player and enemy share a tile
 function checkCollisions() {
-  enemies.forEach((e) => {
+  for (let i = enemies.length - 1; i >= 0; i--) {
+    const e = enemies[i];
     if (e.x === player.x && e.y === player.y) {
-      console.log('Game Over');
-      // Stop the game loop by not requesting another frame
-      gameRunning = false;
+      player.hp--;
+      enemies.splice(i, 1);
+      if (player.hp <= 0) {
+        gameRunning = false;
+      }
     }
-  });
+  }
 }
 
 let gameRunning = true;
