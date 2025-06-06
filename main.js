@@ -13,6 +13,8 @@ let dungeon = [];
 let player = { x: 1, y: 1, hp: 3, dir: { x: 0, y: 1 } };
 let enemies = [];
 let projectiles = [];
+let arrowCount = 10;
+let mouseTile = { x: 0, y: 0 };
 
 // Movement timing (in ms) to slow things down
 const PLAYER_MOVE_DELAY = 150;
@@ -205,7 +207,7 @@ function render() {
   // Draw HUD: Player HP
   ctx.fillStyle = '#fff';
   ctx.font = '16px sans-serif';
-  ctx.fillText('HP: ' + player.hp, 10, 20);
+  ctx.fillText('HP: ' + player.hp + '  Arrows: ' + arrowCount, 10, 20);
 }
 
 // Basic input handling
@@ -230,6 +232,15 @@ window.addEventListener(
   },
   false
 );
+
+// Track mouse position relative to the canvas
+canvas.addEventListener('mousemove', (e) => {
+  const rect = canvas.getBoundingClientRect();
+  const mx = e.clientX - rect.left;
+  const my = e.clientY - rect.top;
+  mouseTile.x = Math.floor(mx / TILE_SIZE);
+  mouseTile.y = Math.floor(my / TILE_SIZE);
+});
 
 // Move player if no wall ahead
 function updatePlayer() {
@@ -295,10 +306,12 @@ function updateEnemies() {
 
 // Arrow projectile handling
 function shootArrow() {
-  const dx = player.dir.x;
-  const dy = player.dir.y;
+  if (arrowCount <= 0) return;
+  const dx = Math.sign(mouseTile.x - player.x);
+  const dy = Math.sign(mouseTile.y - player.y);
   if (dx === 0 && dy === 0) return;
   projectiles.push({ x: player.x + dx, y: player.y + dy, dx, dy });
+  arrowCount--;
 }
 
 function swingWeapon() {
