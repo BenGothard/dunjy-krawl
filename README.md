@@ -17,5 +17,6 @@ can play the game from their browser.
 
 - Move with arrow keys or **WASD**
 - Press **Space** to swing your weapon at the tile in front of you
-- Press **F** to fire an arrow in the direction you're facing
+- Press **F** to fire an arrow toward the mouse pointer
+  - You start with 10 arrows displayed on the HUD
 
