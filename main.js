@@ -141,6 +141,48 @@ function generateDungeon() {
   projectiles = [];
 }
 
+// ----- Rendering helpers -----
+function drawPlayerSprite(p) {
+  const x = p.x * TILE_SIZE;
+  const y = p.y * TILE_SIZE;
+
+  // head
+  ctx.fillStyle = '#ffe0bd';
+  ctx.beginPath();
+  ctx.arc(x + TILE_SIZE / 2, y + 8, 6, 0, Math.PI * 2);
+  ctx.fill();
+
+  // body
+  ctx.fillStyle = '#09f';
+  ctx.fillRect(x + TILE_SIZE / 2 - 6, y + 14, 12, 14);
+
+  // legs
+  ctx.fillRect(x + TILE_SIZE / 2 - 6, y + 28, 4, 8);
+  ctx.fillRect(x + TILE_SIZE / 2 + 2, y + 28, 4, 8);
+}
+
+function drawEnemySprite(e) {
+  const x = e.x * TILE_SIZE;
+  const y = e.y * TILE_SIZE;
+
+  // head with horns
+  ctx.fillStyle = '#b00';
+  ctx.beginPath();
+  ctx.arc(x + TILE_SIZE / 2, y + 8, 6, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.fillStyle = '#ccc';
+  ctx.fillRect(x + 6, y + 2, 4, 4);
+  ctx.fillRect(x + TILE_SIZE - 10, y + 2, 4, 4);
+
+  // body
+  ctx.fillStyle = '#d22';
+  ctx.fillRect(x + TILE_SIZE / 2 - 8, y + 14, 16, 16);
+
+  // legs
+  ctx.fillRect(x + TILE_SIZE / 2 - 8, y + 30, 6, 6);
+  ctx.fillRect(x + TILE_SIZE / 2 + 2, y + 30, 6, 6);
+}
+
 // Draw dungeon + player + enemies + HUD
 function render() {
   // Clear the canvas
@@ -160,24 +202,10 @@ function render() {
     }
   }
 
-  // Draw player as a green square
-  ctx.fillStyle = '#0f0';
-  ctx.fillRect(
-    player.x * TILE_SIZE + 2,
-    player.y * TILE_SIZE + 2,
-    TILE_SIZE - 4,
-    TILE_SIZE - 4
-  );
-
-  // Draw enemies as red squares
-  ctx.fillStyle = '#f00';
+  // Draw player and enemies with simple sprites
+  drawPlayerSprite(player);
   enemies.forEach((e) => {
-    ctx.fillRect(
-      e.x * TILE_SIZE + 2,
-      e.y * TILE_SIZE + 2,
-      TILE_SIZE - 4,
-      TILE_SIZE - 4
-    );
+    drawEnemySprite(e);
   });
 
   // Draw arrows as small yellow lines

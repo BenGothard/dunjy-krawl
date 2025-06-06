@@ -1,5 +1,7 @@
 # dunjy-krawl
-Dunjy Krawl: A lightweight web-based dungeon crawler by Ben Gothard
+Dunjy Krawl: A lightweight web-based dungeon crawler by Ben Gothard. The game
+now features simple character sprites so the player and enemies look more like
+people and monsters instead of plain squares.
 
 ## GitHub Pages
 The repository is configured with a GitHub Actions workflow that publishes the
