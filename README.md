@@ -23,3 +23,11 @@ can play the game from their browser.
   - You start with 10 arrows displayed on the HUD
 - Press **R** to restart after a Game Over
 
+
+## Testing
+
+Run the project's unit tests with:
+
+```bash
+npm test
+```
