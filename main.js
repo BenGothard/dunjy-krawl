@@ -14,6 +14,17 @@ let player = { x: 1, y: 1, hp: 3, dir: { x: 0, y: 1 } };
 let enemies = [];
 let projectiles = [];
 
+// Movement timing (in ms) to slow things down
+const PLAYER_MOVE_DELAY = 150;
+const ENEMY_MOVE_DELAY = 400;
+const PROJECTILE_MOVE_DELAY = 100;
+let lastPlayerMove = 0;
+let lastEnemyMove = 0;
+let lastProjectileMove = 0;
+
+// Visual effect for weapon swings
+let swingEffect = { x: 0, y: 0, timer: 0 };
+
 // Initialize dungeon array (all walls for now)
 function initDungeon() {
   dungeon = new Array(ROWS)
@@ -167,16 +178,29 @@ function render() {
     );
   });
 
-  // Draw arrows as yellow squares
-  ctx.fillStyle = '#ff0';
+  // Draw arrows as small yellow lines
+  ctx.strokeStyle = '#ff0';
+  ctx.lineWidth = 4;
   projectiles.forEach((p) => {
-    ctx.fillRect(
-      p.x * TILE_SIZE + TILE_SIZE / 4,
-      p.y * TILE_SIZE + TILE_SIZE / 4,
-      TILE_SIZE / 2,
-      TILE_SIZE / 2
-    );
+    const cx = p.x * TILE_SIZE + TILE_SIZE / 2;
+    const cy = p.y * TILE_SIZE + TILE_SIZE / 2;
+    ctx.beginPath();
+    ctx.moveTo(cx - p.dx * TILE_SIZE / 4, cy - p.dy * TILE_SIZE / 4);
+    ctx.lineTo(cx + p.dx * TILE_SIZE / 4, cy + p.dy * TILE_SIZE / 4);
+    ctx.stroke();
   });
+
+  // Draw weapon swing effect
+  if (swingEffect.timer > 0) {
+    ctx.fillStyle = '#880';
+    ctx.fillRect(
+      swingEffect.x * TILE_SIZE + 2,
+      swingEffect.y * TILE_SIZE + 2,
+      TILE_SIZE - 4,
+      TILE_SIZE - 4
+    );
+    swingEffect.timer--;
+  }
 
   // Draw HUD: Player HP
   ctx.fillStyle = '#fff';
@@ -209,6 +233,9 @@ window.addEventListener(
 
 // Move player if no wall ahead
 function updatePlayer() {
+  if (performance.now() - lastPlayerMove < PLAYER_MOVE_DELAY) return;
+  lastPlayerMove = performance.now();
+
   let newX = player.x;
   let newY = player.y;
 
@@ -243,6 +270,8 @@ function updatePlayer() {
 
 // Simple enemy AI (random movement)
 function updateEnemies() {
+  if (performance.now() - lastEnemyMove < ENEMY_MOVE_DELAY) return;
+  lastEnemyMove = performance.now();
   enemies.forEach((e) => {
     const dir = Math.floor(Math.random() * 4);
     let nx = e.x;
@@ -276,9 +305,12 @@ function swingWeapon() {
   const tx = player.x + player.dir.x;
   const ty = player.y + player.dir.y;
   enemies = enemies.filter((e) => !(e.x === tx && e.y === ty));
+  swingEffect = { x: tx, y: ty, timer: 6 };
 }
 
 function updateProjectiles() {
+  if (performance.now() - lastProjectileMove < PROJECTILE_MOVE_DELAY) return;
+  lastProjectileMove = performance.now();
   for (let i = projectiles.length - 1; i >= 0; i--) {
     const p = projectiles[i];
     p.x += p.dx;
