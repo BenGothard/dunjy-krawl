@@ -10,8 +10,9 @@ const ROWS = Math.floor(canvas.height / TILE_SIZE);
 
 // Game state placeholders
 let dungeon = [];
-let player = { x: 1, y: 1, hp: 3 };
+let player = { x: 1, y: 1, hp: 3, dir: { x: 0, y: 1 } };
 let enemies = [];
+let projectiles = [];
 
 // Initialize dungeon array (all walls for now)
 function initDungeon() {
@@ -100,7 +101,8 @@ function generateDungeon() {
     player = {
       x: Math.floor(first.x + first.w / 2),
       y: Math.floor(first.y + first.h / 2),
-      hp: 3
+      hp: 3,
+      dir: { x: 0, y: 1 }
     };
   }
 
@@ -123,6 +125,7 @@ function generateDungeon() {
   while (enemies.length < 2) {
     enemies.push({ x: COLS - 3, y: ROWS - 3 });
   }
+  projectiles = [];
 }
 
 // Draw dungeon + player + enemies + HUD
@@ -164,6 +167,17 @@ function render() {
     );
   });
 
+  // Draw arrows as yellow squares
+  ctx.fillStyle = '#ff0';
+  projectiles.forEach((p) => {
+    ctx.fillRect(
+      p.x * TILE_SIZE + TILE_SIZE / 4,
+      p.y * TILE_SIZE + TILE_SIZE / 4,
+      TILE_SIZE / 2,
+      TILE_SIZE / 2
+    );
+  });
+
   // Draw HUD: Player HP
   ctx.fillStyle = '#fff';
   ctx.font = '16px sans-serif';
@@ -176,6 +190,12 @@ window.addEventListener(
   'keydown',
   (e) => {
     keysDown[e.key] = true;
+    if (e.code === 'Space') {
+      swingWeapon();
+    }
+    if (e.key === 'f') {
+      shootArrow();
+    }
   },
   false
 );
@@ -192,10 +212,22 @@ function updatePlayer() {
   let newX = player.x;
   let newY = player.y;
 
-  if (keysDown['ArrowUp'] || keysDown['w']) newY--;
-  if (keysDown['ArrowDown'] || keysDown['s']) newY++;
-  if (keysDown['ArrowLeft'] || keysDown['a']) newX--;
-  if (keysDown['ArrowRight'] || keysDown['d']) newX++;
+  if (keysDown['ArrowUp'] || keysDown['w']) {
+    newY--;
+    player.dir = { x: 0, y: -1 };
+  }
+  if (keysDown['ArrowDown'] || keysDown['s']) {
+    newY++;
+    player.dir = { x: 0, y: 1 };
+  }
+  if (keysDown['ArrowLeft'] || keysDown['a']) {
+    newX--;
+    player.dir = { x: -1, y: 0 };
+  }
+  if (keysDown['ArrowRight'] || keysDown['d']) {
+    newX++;
+    player.dir = { x: 1, y: 0 };
+  }
 
   if (
     newX >= 0 &&
@@ -232,6 +264,45 @@ function updateEnemies() {
   });
 }
 
+// Arrow projectile handling
+function shootArrow() {
+  const dx = player.dir.x;
+  const dy = player.dir.y;
+  if (dx === 0 && dy === 0) return;
+  projectiles.push({ x: player.x + dx, y: player.y + dy, dx, dy });
+}
+
+function swingWeapon() {
+  const tx = player.x + player.dir.x;
+  const ty = player.y + player.dir.y;
+  enemies = enemies.filter((e) => !(e.x === tx && e.y === ty));
+}
+
+function updateProjectiles() {
+  for (let i = projectiles.length - 1; i >= 0; i--) {
+    const p = projectiles[i];
+    p.x += p.dx;
+    p.y += p.dy;
+    if (
+      p.x < 0 ||
+      p.x >= COLS ||
+      p.y < 0 ||
+      p.y >= ROWS ||
+      dungeon[p.y][p.x] === 1
+    ) {
+      projectiles.splice(i, 1);
+      continue;
+    }
+    for (let j = enemies.length - 1; j >= 0; j--) {
+      if (enemies[j].x === p.x && enemies[j].y === p.y) {
+        enemies.splice(j, 1);
+        projectiles.splice(i, 1);
+        break;
+      }
+    }
+  }
+}
+
 // Check collisions: if player and enemy share a tile
 function checkCollisions() {
   enemies.forEach((e) => {
@@ -250,6 +321,7 @@ let gameRunning = true;
 function update() {
   updatePlayer();
   updateEnemies();
+  updateProjectiles();
   checkCollisions();
 }
 

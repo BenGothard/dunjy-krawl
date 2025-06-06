@@ -13,3 +13,9 @@ https://<your-github-username>.github.io/dunjy-krawl/
 Simply push changes to `main` and the site will automatically deploy so anyone
 can play the game from their browser.
 
+## Controls
+
+- Move with arrow keys or **WASD**
+- Press **Space** to swing your weapon at the tile in front of you
+- Press **F** to fire an arrow in the direction you're facing
+
