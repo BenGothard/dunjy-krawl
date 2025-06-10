@@ -414,11 +414,21 @@ function drawStartScreen() {
   ctx.fillStyle = '#000';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
   ctx.fillStyle = '#fff';
-  ctx.font = '32px sans-serif';
+  ctx.font = 'bold 48px sans-serif';
   ctx.textAlign = 'center';
-  ctx.fillText('Dunjy Krawl', canvas.width / 2, canvas.height / 2 - 20);
+  ctx.fillText(
+    'Dunjy Krawl: Epic Quest',
+    canvas.width / 2,
+    canvas.height / 2 - 50
+  );
+  ctx.font = '24px sans-serif';
+  ctx.fillText(
+    'An Epic Adventure Awaits',
+    canvas.width / 2,
+    canvas.height / 2 - 10
+  );
   ctx.font = '20px sans-serif';
-  ctx.fillText('Press Enter to begin', canvas.width / 2, canvas.height / 2 + 20);
+  ctx.fillText('Press Enter to begin', canvas.width / 2, canvas.height / 2 + 40);
 }
 
 
