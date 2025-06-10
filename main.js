@@ -14,6 +14,9 @@ let player = { x: 1, y: 1, hp: 3, dir: { x: 0, y: 1 } };
 let enemies = [];
 let projectiles = [];
 let arrowCount = 10;
+let level = 1;
+const MAX_LEVEL = 3;
+let gameState = 'start';
 let mouseTile = { x: 0, y: 0 };
 
 // Movement timing (in ms) to slow things down
@@ -60,7 +63,7 @@ function carveCorridor(x1, y1, x2, y2) {
 }
 
 // Procedurally generate rooms and corridors
-function generateDungeon() {
+function generateDungeon(currentLevel = 1) {
   initDungeon();
 
   const rooms = [];
@@ -119,23 +122,17 @@ function generateDungeon() {
     };
   }
 
-  // Place two enemies in the last rooms (or random positions)
+  // Place enemies in the other rooms or random positions
   enemies = [];
-  if (rooms.length >= 2) {
-    const last = rooms[rooms.length - 1];
+  const enemyCount = 2 + currentLevel;
+  for (let i = 1; i < rooms.length && enemies.length < enemyCount; i++) {
+    const r = rooms[i];
     enemies.push({
-      x: Math.floor(last.x + last.w / 2),
-      y: Math.floor(last.y + last.h / 2)
+      x: Math.floor(r.x + r.w / 2),
+      y: Math.floor(r.y + r.h / 2)
     });
   }
-  if (rooms.length >= 3) {
-    const last2 = rooms[rooms.length - 2];
-    enemies.push({
-      x: Math.floor(last2.x + last2.w / 2),
-      y: Math.floor(last2.y + last2.h / 2)
-    });
-  }
-  while (enemies.length < 2) {
+  while (enemies.length < enemyCount) {
     enemies.push({ x: COLS - 3, y: ROWS - 3 });
   }
   projectiles = [];
@@ -235,7 +232,7 @@ function render() {
   // Draw HUD: Player HP
   ctx.fillStyle = '#fff';
   ctx.font = '16px sans-serif';
-  ctx.fillText('HP: ' + player.hp + '  Arrows: ' + arrowCount, 10, 20);
+  ctx.fillText('HP: ' + player.hp + '  Arrows: ' + arrowCount + '  Level: ' + level, 10, 20);
 }
 
 // Basic input handling
@@ -243,11 +240,15 @@ let keysDown = {};
 window.addEventListener(
   'keydown',
   (e) => {
-    // restart if game over and R is pressed
-    if (!gameRunning && e.key.toLowerCase() === 'r') {
-      init();
+    if (gameState === 'start' && e.key === 'Enter') {
+      startGame();
       return;
     }
+    if ((gameState === 'gameover' || gameState === 'victory') && e.key.toLowerCase() === 'r') {
+      gameState = 'start';
+      return;
+    }
+    if (gameState !== 'running') return;
 
     keysDown[e.key] = true;
     if (e.code === 'Space') {
@@ -390,13 +391,11 @@ function checkCollisions() {
       player.hp--;
       enemies.splice(i, 1);
       if (player.hp <= 0) {
-        gameRunning = false;
+        gameState = 'gameover';
       }
     }
   }
 }
-
-let gameRunning = true;
 
 function drawGameOver() {
   ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
@@ -409,6 +408,54 @@ function drawGameOver() {
   ctx.fillText('Press R to restart', canvas.width / 2, canvas.height / 2 + 20);
 }
 
+function drawStartScreen() {
+  ctx.fillStyle = '#000';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = '#fff';
+  ctx.font = '32px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('Dunjy Krawl', canvas.width / 2, canvas.height / 2 - 20);
+  ctx.font = '20px sans-serif';
+  ctx.fillText('Press Enter to begin', canvas.width / 2, canvas.height / 2 + 20);
+}
+
+function drawVictoryScreen() {
+  ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = '#fff';
+  ctx.font = '32px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('You Win!', canvas.width / 2, canvas.height / 2 - 20);
+  ctx.font = '20px sans-serif';
+  ctx.fillText('Press R to restart', canvas.width / 2, canvas.height / 2 + 20);
+}
+
+function initLevel() {
+  arrowCount = 10;
+  generateDungeon(level);
+}
+
+function startGame() {
+  level = 1;
+  gameState = 'running';
+  initLevel();
+}
+
+function nextLevel() {
+  level++;
+  if (level > MAX_LEVEL) {
+    gameState = 'victory';
+  } else {
+    initLevel();
+  }
+}
+
+function checkLevelComplete() {
+  if (gameState === 'running' && enemies.length === 0) {
+    nextLevel();
+  }
+}
+
 // Main game loop
 // Update all game entities
 function update() {
@@ -416,25 +463,27 @@ function update() {
   updateEnemies();
   updateProjectiles();
   checkCollisions();
+  checkLevelComplete();
 }
 
 // Main game loop
 function gameLoop() {
-  if (!gameRunning) {
-    render();
-    drawGameOver();
-    return;
-  }
-  update();
   render();
+  if (gameState === 'start') {
+    drawStartScreen();
+  } else if (gameState === 'running') {
+    update();
+  } else if (gameState === 'gameover') {
+    drawGameOver();
+  } else if (gameState === 'victory') {
+    drawVictoryScreen();
+  }
   requestAnimationFrame(gameLoop);
 }
 
 // Entry point
 function init() {
-  arrowCount = 10;
-  generateDungeon();
-  gameRunning = true;
+  gameState = 'start';
   gameLoop();
 }
 
