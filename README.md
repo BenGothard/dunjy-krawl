@@ -4,6 +4,9 @@ now features simple character sprites so the player and enemies look more like
 people and monsters instead of plain squares. It now includes multiple levels
 that loop endlessly, increasing difficulty each time you clear all stages.
 
+The start screen now proclaims **"Dunjy Krawl: Epic Quest"**, inviting players
+to embark on an unforgettable adventure as soon as they load the page.
+
 ## GitHub Pages
 The repository is configured with a GitHub Actions workflow that publishes the
 contents of the `main` branch to GitHub Pages. Once the repository owner
