@@ -15,6 +15,7 @@ let enemies = [];
 let projectiles = [];
 let arrowCount = 10;
 let level = 1;
+let difficulty = 1;
 const MAX_LEVEL = 3;
 let gameState = 'start';
 let mouseTile = { x: 0, y: 0 };
@@ -124,7 +125,7 @@ function generateDungeon(currentLevel = 1) {
 
   // Place enemies in the other rooms or random positions
   enemies = [];
-  const enemyCount = 2 + currentLevel;
+  const enemyCount = 2 + currentLevel + (difficulty - 1);
   for (let i = 1; i < rooms.length && enemies.length < enemyCount; i++) {
     const r = rooms[i];
     enemies.push({
@@ -232,7 +233,8 @@ function render() {
   // Draw HUD: Player HP
   ctx.fillStyle = '#fff';
   ctx.font = '16px sans-serif';
-  ctx.fillText('HP: ' + player.hp + '  Arrows: ' + arrowCount + '  Level: ' + level, 10, 20);
+  ctx.fillText('HP: ' + player.hp + '  Arrows: ' + arrowCount +
+    '  Level: ' + level + '  Difficulty: ' + difficulty, 10, 20);
 }
 
 // Basic input handling
@@ -244,7 +246,7 @@ window.addEventListener(
       startGame();
       return;
     }
-    if ((gameState === 'gameover' || gameState === 'victory') && e.key.toLowerCase() === 'r') {
+    if (gameState === 'gameover' && e.key.toLowerCase() === 'r') {
       gameState = 'start';
       return;
     }
@@ -419,16 +421,6 @@ function drawStartScreen() {
   ctx.fillText('Press Enter to begin', canvas.width / 2, canvas.height / 2 + 20);
 }
 
-function drawVictoryScreen() {
-  ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-  ctx.fillStyle = '#fff';
-  ctx.font = '32px sans-serif';
-  ctx.textAlign = 'center';
-  ctx.fillText('You Win!', canvas.width / 2, canvas.height / 2 - 20);
-  ctx.font = '20px sans-serif';
-  ctx.fillText('Press R to restart', canvas.width / 2, canvas.height / 2 + 20);
-}
 
 function initLevel() {
   arrowCount = 10;
@@ -444,7 +436,8 @@ function startGame() {
 function nextLevel() {
   level++;
   if (level > MAX_LEVEL) {
-    gameState = 'victory';
+    difficulty++;
+    gameState = 'start';
   } else {
     initLevel();
   }
@@ -475,8 +468,6 @@ function gameLoop() {
     update();
   } else if (gameState === 'gameover') {
     drawGameOver();
-  } else if (gameState === 'victory') {
-    drawVictoryScreen();
   }
   requestAnimationFrame(gameLoop);
 }

@@ -2,7 +2,7 @@
 Dunjy Krawl: A lightweight web-based dungeon crawler by Ben Gothard. The game
 now features simple character sprites so the player and enemies look more like
 people and monsters instead of plain squares. It now includes multiple levels
-with a start screen and a victory screen.
+that loop endlessly, increasing difficulty each time you clear all stages.
 
 ## GitHub Pages
 The repository is configured with a GitHub Actions workflow that publishes the
