@@ -471,12 +471,15 @@ function update() {
 
 // Main game loop
 function gameLoop() {
-  render();
   if (gameState === 'start') {
+    ctx.fillStyle = '#000';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
     drawStartScreen();
   } else if (gameState === 'running') {
     update();
+    render();
   } else if (gameState === 'gameover') {
+    render();
     drawGameOver();
   }
   requestAnimationFrame(gameLoop);
