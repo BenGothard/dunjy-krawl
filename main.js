@@ -241,7 +241,7 @@ function render() {
 
   // Draw HUD: Player HP
   ctx.fillStyle = '#fff';
-  ctx.font = '16px "Press Start 2P", sans-serif';
+  ctx.font = '14px "Press Start 2P", sans-serif';
   ctx.fillText('HP: ' + player.hp + '  Arrows: ' + arrowCount +
     '  Level: ' + level + '  Difficulty: ' + difficulty, 10, 20);
 }
@@ -412,10 +412,10 @@ function drawGameOver() {
   ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
   ctx.fillStyle = '#fff';
-  ctx.font = '32px "Press Start 2P", sans-serif';
+  ctx.font = '24px "Press Start 2P", sans-serif';
   ctx.textAlign = 'center';
   ctx.fillText('Game Over', canvas.width / 2, canvas.height / 2 - 20);
-  ctx.font = '20px "Press Start 2P", sans-serif';
+  ctx.font = '16px "Press Start 2P", sans-serif';
   ctx.fillText('Press R to restart', canvas.width / 2, canvas.height / 2 + 20);
 }
 
@@ -423,20 +423,20 @@ function drawStartScreen() {
   ctx.fillStyle = '#000';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
   ctx.fillStyle = '#fff';
-  ctx.font = 'bold 48px "Press Start 2P", sans-serif';
+  ctx.font = 'bold 32px "Press Start 2P", sans-serif';
   ctx.textAlign = 'center';
   ctx.fillText(
     'Dunjy Krawl: Epic Quest',
     canvas.width / 2,
     canvas.height / 2 - 50
   );
-  ctx.font = '24px "Press Start 2P", sans-serif';
+  ctx.font = '18px "Press Start 2P", sans-serif';
   ctx.fillText(
     'An Epic Adventure Awaits',
     canvas.width / 2,
     canvas.height / 2 - 10
   );
-  ctx.font = '20px "Press Start 2P", sans-serif';
+  ctx.font = '14px "Press Start 2P", sans-serif';
   ctx.fillText('Press Enter to begin', canvas.width / 2, canvas.height / 2 + 40);
 }
 
