@@ -5,10 +5,19 @@
   <title>Dunjy Krawl</title>
   <meta name="author" content="Ben Gothard" />
   <link rel="stylesheet" href="style.css" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap"
+    rel="stylesheet"
+  />
 </head>
 <body>
-  <canvas id="gameCanvas" width="800" height="600"></canvas>
-  <p style="text-align:center;margin-top:10px">Use arrow keys/WASD to move. Press <strong>Space</strong> to attack, <strong>F</strong> to shoot, and <strong>R</strong> to restart after dying.</p>
+  <div id="gameWrapper">
+    <canvas id="gameCanvas" width="800" height="600"></canvas>
+    <p class="instructions">
+      Use arrow keys/WASD to move. Press <strong>Space</strong> to attack,
+      <strong>F</strong> to shoot, and <strong>R</strong> to restart after dying.
+    </p>
+  </div>
   <script src="main.js"></script>
 </body>
 </html>

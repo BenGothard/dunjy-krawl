@@ -4,6 +4,10 @@ now features simple character sprites so the player and enemies look more like
 people and monsters instead of plain squares. It now includes multiple levels
 that loop endlessly, increasing difficulty each time you clear all stages.
 
+The interface has been overhauled with a vibrant retro theme powered by the
+"Press Start 2P" font and polished styling so the game looks as fun as it
+plays.
+
 The start screen now proclaims **"Dunjy Krawl: Epic Quest"**, inviting players
 to embark on an unforgettable adventure as soon as they load the page.
 
