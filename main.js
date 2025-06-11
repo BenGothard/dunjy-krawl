@@ -134,7 +134,16 @@ function generateDungeon(currentLevel = 1) {
     });
   }
   while (enemies.length < enemyCount) {
-    enemies.push({ x: COLS - 3, y: ROWS - 3 });
+    let rx, ry;
+    do {
+      rx = randInt(1, COLS - 2);
+      ry = randInt(1, ROWS - 2);
+    } while (
+      dungeon[ry][rx] !== 0 ||
+      (rx === player.x && ry === player.y) ||
+      enemies.some((en) => en.x === rx && en.y === ry)
+    );
+    enemies.push({ x: rx, y: ry });
   }
   projectiles = [];
 }
